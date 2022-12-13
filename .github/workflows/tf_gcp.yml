@@ -53,6 +53,10 @@ jobs:
           project_id: ${{ env.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets[matrix.GCP_KEY] }}
           export_default_credentials: true
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check -no-color
       
       - name: Terraform Init GCP
         id: init
@@ -61,31 +65,58 @@ jobs:
           rm -rf .terraform
           rm -rf .terraform.lock.hcl
           terraform init -backend-config ../env/${{ matrix.workspace }}_gcp.state.tf -input=false
+      
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
       - name: Terraform Plan GCP
       # Check
-        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'pull_request'
         working-directory: ./gcp
         id: plan
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
 
-      - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
+      - name: Update Pull Request
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
+          github-token: ${{ secrets.HUB_TOKEN }}
           script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Thanks for reporting!'
+              body: output
             })
+      
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          terraform apply -var-file ../env/${{ matrix.workspace }}.tfvars -auto-approve -input=false -lock=false -refresh=true
+          terraform apply -auto-approve -input=false -var-file ../env/${{ matrix.workspace }}.tfvars -lock=false -refresh=true
       
       # On push to master, build or change infrastructure according to Terraform configuration files
       # - name: Terraform Destroy
