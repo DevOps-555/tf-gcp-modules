@@ -1,12 +1,11 @@
 name: Terraform Plan GCP
 
 on: 
-  # Manual trigger
-  workflow_dispatch:
+  # workflow_dispatch:
   push:
     branches: [ main ]
-    paths:
-      - '*/**'
+    # paths:
+    #   - '*/**'
   pull_request:
 
 jobs:
