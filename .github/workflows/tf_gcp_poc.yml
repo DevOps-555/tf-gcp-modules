@@ -1,0 +1,97 @@
+name: Terraform Plan GCP
+
+on: 
+  # Manual trigger
+  workflow_dispatch:
+  push:
+    paths:
+      - '*/**'
+  pull_request:
+      branches: [ main ]
+
+jobs:
+  tf-gcp-setup:
+    strategy:
+      matrix:
+        workspace: [test]
+        include:
+          - workspace: test
+            GCP_KEY: GCP_SA_KEY
+
+    name: ${{ matrix.workspace }}
+    runs-on: ubuntu-latest
+
+    env:
+      WORKSPACE: ${{ matrix.workspace }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          submodules: true
+
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.1.9
+          terraform_wrapper: false
+
+      - name: Extract Project ID
+        run: |
+          gcp_project=`cat ./env/${{ matrix.workspace }}.tfvars | grep "gcp_project" | sed 's/^[^"]*"\([^"]*\)".*/\1/'`
+          echo "Setting Project : $gcp_project"
+          echo "GCP_PROJECT_ID=$gcp_project" >> $GITHUB_ENV
+          echo "ORG_ID=${{ secrets.ORG_ID }}" >> $GITHUB_ENV
+          echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Set up gcloud SDK environment
+      # Helps to download gcloud SDK's into the runners machines
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          version: "411.0.0"
+          project_id: ${{ env.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets[matrix.GCP_KEY] }}
+          export_default_credentials: true
+      
+      - name: Terraform Init GCP
+        id: init
+        working-directory: ./gcp
+        run: | 
+          rm -rf .terraform
+          rm -rf .terraform.lock.hcl
+          terraform init -backend-config ../env/${{ matrix.workspace }}_gcp.state.tf -input=false
+
+      - name: Terraform Plan GCP
+      # Check
+        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
+        working-directory: ./gcp
+        id: plan
+        run: |
+          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
+
+      - uses: actions/github-script@v6
+        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Thanks for reporting!'
+            })
+
+      # On push to master, build or change infrastructure according to Terraform configuration files
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: terraform apply -auto-approve -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
+      
+      # On push to master, build or change infrastructure according to Terraform configuration files
+      # - name: Terraform Destroy
+      #   if: github.ref == 'refs/feature/destroy' && github.event_name == 'push'
+      #   run: terraform destroy -auto-approve -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
+
+
+      # pull --> Checksum --> merge / master --> apply github action --> Checksum value ( State tf )
+
+      # 3 -- Repo - Will call central repo's -- Copy module -- networking -- module 
