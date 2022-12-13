@@ -1,6 +1,13 @@
 name: Terraform Plan GCP
 
-on: [push, pull_request]
+on:
+  # Manual trigger
+  workflow_dispatch:
+  push:
+    paths:
+      - '*/**'
+  pull_request:
+    branches: [ main ]
 
 jobs:
   tf-gcp-setup:
@@ -66,13 +73,12 @@ jobs:
       - name: Terraform Plan GCP
         working-directory: ./gcp
         id: plan
-        if: github.event_name == 'pull_request'
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
 
       - name: Update Pull Request
         uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
