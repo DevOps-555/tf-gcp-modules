@@ -1,6 +1,13 @@
 name: Terraform Plan GCP
 
-on: [push, pull_request]
+on:
+  # Manual trigger
+  workflow_dispatch:
+  push:
+    paths:
+      - '*/**'
+  pull_request:
+    branches: [ main ]
 
 jobs:
   tf-gcp-setup:
@@ -64,9 +71,9 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Plan GCP
-        if: github.event_name == 'pull_request'
         working-directory: ./gcp
         id: plan
+        if: github.event_name == 'pull_request'
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
 
@@ -100,9 +107,9 @@ jobs:
               body: output
             })
       
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+      # - name: Terraform Plan Status
+      #   if: steps.plan.outcome == 'failure'
+      #   run: exit 1
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
