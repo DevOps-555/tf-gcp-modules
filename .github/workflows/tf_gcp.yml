@@ -73,6 +73,7 @@ jobs:
       - name: Terraform Plan GCP
         working-directory: ./gcp
         id: plan
+        if: github.event_name == 'pull_request'
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
 
