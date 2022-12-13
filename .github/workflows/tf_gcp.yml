@@ -1,12 +1,7 @@
 name: Terraform Plan GCP
 
-on: 
-  # workflow_dispatch:
-  push:
-    # paths:
-    #   - '*/**'
-  pull_request:
-      branches: [ main ]
+on: [push, pull_request]
+
 jobs:
   tf-gcp-setup:
     strategy:
