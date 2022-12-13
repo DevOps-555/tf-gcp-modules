@@ -4,8 +4,6 @@ on:
   # Manual trigger
   workflow_dispatch:
   push:
-    paths:
-      - '*/**'
   pull_request:
     branches: [ main ]
 
@@ -115,7 +113,7 @@ jobs:
       - name: Terraform Plan && Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          terraform apply -auto-approve -input=false -lock=false -refresh=true
+          terraform apply -auto-approve -input=false -lock=false -refresh=true -var-file=../env/${{ matrix.workspace }}.tfvars
       
       # On push to master, build or change infrastructure according to Terraform configuration files
       # - name: Terraform Destroy
