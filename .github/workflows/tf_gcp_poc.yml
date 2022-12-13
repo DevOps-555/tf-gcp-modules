@@ -71,7 +71,7 @@ jobs:
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
 
       - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
         with:
           script: |
             github.rest.issues.createComment({
@@ -83,7 +83,7 @@ jobs:
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
       
       # On push to master, build or change infrastructure according to Terraform configuration files
