@@ -9,7 +9,7 @@ provider "google-beta" {
 }
 
 module "ansible-server-01" {
-  source = "../gcp/modules/gce"
+  source = "./modules/gce"
 
   gcp_project  = var.gcp_project
 
