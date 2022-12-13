@@ -73,7 +73,7 @@ jobs:
       - name: Terraform Plan GCP
         working-directory: ./gcp
         id: plan
-        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        if: github.event_name == 'pull_request'
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
 
@@ -98,7 +98,7 @@ jobs:
 
             </details>
 
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`, Workflow: \`${{ github.workflow }}\`*`;
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -112,9 +112,10 @@ jobs:
       #   run: exit 1
 
       # On push to master, build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply
+      - name: Terraform Plan && Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
+          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
           terraform apply -auto-approve -input=false -var-file ../env/${{ matrix.workspace }}.tfvars -lock=false -refresh=true
       
       # On push to master, build or change infrastructure according to Terraform configuration files
