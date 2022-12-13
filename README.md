@@ -1,31 +1,3 @@
-###### Github Clone and switch the project to master branch
-```
-git clone < Get the clone url from the github acount>
-git pull
-```
-
-##### Terraform Command's used 
-
-```
-terraform init --> command initializes a working directory containing configuration files and installs plugins for required providers.
-terraform plan -->  lets you to preview the actions Terraform would take to modify your infrastructure, or save a speculative plan which you can apply later. 
-terraform apply --> command executes the actions proposed in a terraform plan
-```
-
-###### Terraform Module & Resources File Structure Configuration:
-
-**Root-Module** 
-```
-gcp --> This consists of main.tf, output.tf, variable.tf, version.tf which are dependent on below mentioned modules:
-```
-
-**Modules**
-```
-modules --> Consists of GCP Service
-            gce/ 
-            networking/
-            srcipts/
-```
 
 **Init⚙️**
 ```
