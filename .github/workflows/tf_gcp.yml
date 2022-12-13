@@ -73,7 +73,7 @@ jobs:
       - name: Terraform Plan GCP
         working-directory: ./gcp
         id: plan
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
 
@@ -112,10 +112,10 @@ jobs:
       #   run: exit 1
 
       # On push to master, build or change infrastructure according to Terraform configuration files
-      - name: Terraform Plan && Apply
+      - name: Terraform && Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          terraform apply -auto-approve -input=false -lock=false -refresh=true -var-file=../env/${{ matrix.workspace }}.tfvars
+          terraform apply -auto-approve -input=false -lock=false -refresh=true -var-file ../env/test.tfvars
       
       # On push to master, build or change infrastructure according to Terraform configuration files
       # - name: Terraform Destroy
