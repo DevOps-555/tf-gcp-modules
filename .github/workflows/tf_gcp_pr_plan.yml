@@ -1,6 +1,8 @@
 name: Terraform PR Plan
 
 on:
+  workflow_dispatch:    
+  push:
   pull_request:
     branches: 
       - main
@@ -71,8 +73,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          sleep 30s
-          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
+          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -out=tfplan -no-color
 
       - name: Update Pull Request
         uses: actions/github-script@v6
@@ -109,3 +110,23 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
+
+      # On push to master, build or change infrastructure according to Terraform configuration files
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: Apply
+        run: |
+          terraform apply -var-file="../env/${{ matrix.workspace }}.tfvars" -auto-approve
+# terraform apply -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -auto-approve
+          
+
+      
+      # On push to master, build or change infrastructure according to Terraform configuration files
+      # - name: Terraform Destroy
+      #   if: github.ref == 'refs/feature/destroy' && github.event_name == 'push'
+      #   run: terraform destroy -auto-approve -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
+
+
+      # pull --> Checksum --> merge / master --> apply github action --> Checksum value ( State tf )
+
+      # 3 -- Repo - Will call central repo's -- Copy module -- networking -- module 
