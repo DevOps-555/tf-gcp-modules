@@ -77,7 +77,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: Apply
         run: |
-          terraform apply -auto-approve -input=false -lock=false -refresh=true -var-file=../env/${{ matrix.workspace }}.tfvars
+          terraform apply -auto-approve -input=false -lock=false -refresh=true -var-file="../env/${{ matrix.workspace }}.tfvars"
       
       # On push to master, build or change infrastructure according to Terraform configuration files
       # - name: Terraform Destroy
