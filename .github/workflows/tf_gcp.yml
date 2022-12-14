@@ -1,8 +1,6 @@
-name: Terraform Plan GCP
+name: Terraform GCP Validation Plan
 
 on:
-  # Manual trigger
-  # workflow_dispatch:
   push:
     branches:
       - main
