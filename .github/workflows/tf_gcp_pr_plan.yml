@@ -11,9 +11,9 @@ jobs:
   tf-gcp-setup:
     strategy:
       matrix:
-        workspace: [test]
+        workspace: [dev]
         include:
-          - workspace: test
+          - workspace: dev
             GCP_KEY: GCP_SA_KEY
 
     name: ${{ matrix.workspace }}
@@ -109,7 +109,12 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: Apply
         run: |
-          terraform apply -auto-approve -input=false -var-file ../env/${{ matrix.workspace }}.tfvars -lock=false -refresh=true
+          gcp_project=`cat ./env/${{ matrix.workspace }}.tfvars | grep "gcp_project" | sed 's/^[^"]*"\([^"]*\)".*/\1/'`
+          echo "Setting Project : $gcp_project"
+          echo "GCP_PROJECT_ID=$gcp_project" >> $GITHUB_ENV
+          echo "ORG_ID=${{ secrets.ORG_ID }}" >> $GITHUB_ENV
+          echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
+          terraform apply -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -auto-approve
           
       
       # On push to master, build or change infrastructure according to Terraform configuration files
