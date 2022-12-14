@@ -5,8 +5,8 @@ gcp_project     = "nth-glass-338610"
 
 ## --- INSTANCE 01 PARAMETERS ---------------------------------------------------------------------------------------------
 gce-instance-01 = {
-    gce_instance_name       = "\"ansible-server-01\""
-    gce_hostname            = "\"ansible.ml\""
+    gce_instance_name       = "ansible-server-01"
+    gce_hostname            = "ansible.ml"
     gce_region              = "europe-west3"
     gce_zones               = "europe-west3-c"
     gce_tags                = ["ansible", "ansible-server-01"]

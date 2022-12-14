@@ -64,6 +64,7 @@ jobs:
           terraform init -backend-config ../env/${{ matrix.workspace }}_gcp.state.tf -input=false
       
       - name: Terraform Validate
+        working-directory: ./gcp
         id: validate
         run: terraform validate -var-file ../env/${{ matrix.workspace }}.tfvars -input=false
 
@@ -106,6 +107,7 @@ jobs:
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
+        working-directory: ./gcp
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: apply
         run: |
