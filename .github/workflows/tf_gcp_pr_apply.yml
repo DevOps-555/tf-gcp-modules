@@ -1,4 +1,4 @@
-name: Terraform Plan GCP
+name: Terraform GCP Apply
 
 on:
   # Manual trigger
