@@ -15,7 +15,6 @@ gce-instance-01 = {
     gce_boot_disk_image     = "debian-cloud/debian-11"
     gce_vpc_nw              = "default"
     gce_snw                 = "default"
-
 }
 
 ## --- NETWORKING PARAMETERS ---------------------------------------------------------------------------------------------
