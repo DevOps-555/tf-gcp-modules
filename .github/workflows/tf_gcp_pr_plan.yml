@@ -72,7 +72,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          terraform plan -var-file="${{ matrix.workspace }}.tfvars" -input=false -lock=false -refresh=true -out=tfplan -no-color
+          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -out=tfplan -no-color
       - name: Update Pull Request
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -109,7 +109,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: apply
         run: |
-          terraform apply -var-file="dev.tfvars" -input=false -lock=false -refresh=true -auto-approve
+          terraform apply -var-file "../env/${{ matrix.workspace }}.tfvars" -input=false -lock=false -refresh=true -auto-approve
       
       # On push to master, build or change infrastructure according to Terraform configuration files
       # - name: Terraform Destroy
