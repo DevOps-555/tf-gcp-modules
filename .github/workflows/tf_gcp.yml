@@ -71,7 +71,7 @@ jobs:
         working-directory: ./gcp
         id: plan
         run: |
-          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -no-color
+          terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
       
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
