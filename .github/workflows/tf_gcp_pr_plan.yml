@@ -11,9 +11,9 @@ jobs:
   tf-gcp-setup:
     strategy:
       matrix:
-        workspace: [test]
+        workspace: [dev]
         include:
-          - workspace: test
+          - workspace: dev
             GCP_KEY: GCP_SA_KEY
 
     name: ${{ matrix.workspace }}
@@ -42,7 +42,6 @@ jobs:
           echo "GCP_PROJECT_ID=$gcp_project" >> $GITHUB_ENV
           echo "ORG_ID=${{ secrets.ORG_ID }}" >> $GITHUB_ENV
           echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
-
       - name: Set up gcloud SDK environment
       # Helps to download gcloud SDK's into the runners machines
         uses: google-github-actions/setup-gcloud@v0
@@ -74,7 +73,6 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           terraform plan -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -out=tfplan -no-color
-
       - name: Update Pull Request
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
@@ -88,18 +86,13 @@ jobs:
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-
             <details>
               <summary>
                   Show Plan
               </summary>
-
             \`\`\`${process.env.PLAN}\`\`\`
-
             </details>
-
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -107,19 +100,22 @@ jobs:
               body: output
             })
       
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+      # - name: Terraform Plan Status
+      #   if: steps.plan.outcome == 'failure'
+      #   run: exit 1
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: Apply
         run: |
-          pwd
-          terraform apply -auto-approve -input=false -var-file=${{ matrix.workspace }}.tfvars
+          gcp_project=`cat ./env/${{ matrix.workspace }}.tfvars | grep "gcp_project" | sed 's/^[^"]*"\([^"]*\)".*/\1/'`
+          echo "Setting Project : $gcp_project"
+          echo "GCP_PROJECT_ID=$gcp_project" >> $GITHUB_ENV
+          echo "ORG_ID=${{ secrets.ORG_ID }}" >> $GITHUB_ENV
+          echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
+          terraform apply -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -auto-approve
           
-
       
       # On push to master, build or change infrastructure according to Terraform configuration files
       # - name: Terraform Destroy
