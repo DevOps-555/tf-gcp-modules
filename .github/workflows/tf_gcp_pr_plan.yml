@@ -116,7 +116,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: Apply
         run: |
-          terraform apply -var-file="../env/${{ matrix.workspace }}.tfvars" -auto-approve
+          terraform apply -auto-approve
 # terraform apply -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true -auto-approve
           
 
