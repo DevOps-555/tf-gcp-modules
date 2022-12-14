@@ -2,7 +2,6 @@ name: Terraform PR Plan
 
 on:
   workflow_dispatch:    
-  push:
   pull_request:
     branches: 
       - main
@@ -110,23 +109,3 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
-
-      # On push to master, build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        id: Apply
-        run: |
-          pwd
-          terraform apply -auto-approve -input=false -var-file=${{ matrix.workspace }}.tfvars
-          
-
-      
-      # On push to master, build or change infrastructure according to Terraform configuration files
-      # - name: Terraform Destroy
-      #   if: github.ref == 'refs/feature/destroy' && github.event_name == 'push'
-      #   run: terraform destroy -auto-approve -var-file ../env/${{ matrix.workspace }}.tfvars -input=false -lock=false -refresh=true
-
-
-      # pull --> Checksum --> merge / master --> apply github action --> Checksum value ( State tf )
-
-      # 3 -- Repo - Will call central repo's -- Copy module -- networking -- module 
