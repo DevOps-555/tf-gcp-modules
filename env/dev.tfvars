@@ -4,7 +4,7 @@
 gcp_project     = "nth-glass-338610"
 
 ## --- INSTANCE 01 PARAMETERS ---------------------------------------------------------------------------------------------
-gce-instance-01 = {
+gce-ansible-server-01 = {
     gce_instance_name       = "ansible-server-01"
     gce_hostname            = "ansible.ml"
     gce_region              = "europe-west3"
@@ -18,7 +18,7 @@ gce-instance-01 = {
 }
 
 ## --- INSTANCE 02 PARAMETERS ---------------------------------------------------------------------------------------------
-gce-instance-02 = {
+gce-ansible-node-01 = {
     gce_instance_name       = "ansible-node-01"
     gce_hostname            = "ansible.ml"
     gce_region              = "europe-west3"
@@ -32,7 +32,7 @@ gce-instance-02 = {
 }
 
 ## --- INSTANCE 03 PARAMETERS ---------------------------------------------------------------------------------------------
-gce-instance-03 = {
+gce-ansible-node-02 = {
     gce_instance_name       = "ansible-node-02"
     gce_hostname            = "ansible.ml"
     gce_region              = "europe-west3"

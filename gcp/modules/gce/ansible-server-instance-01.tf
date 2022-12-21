@@ -1,14 +1,14 @@
 resource "google_compute_instance" "ansible-server-01" {
   project      = var.gcp_project
-  name         = var.gce-instance-01.gce_instance_name
-  hostname     = var.gce-instance-01.gce_hostname
-  machine_type = var.gce-instance-01.gce_machine_type
-  zone         = var.gce-instance-01.gce_zones
+  name         = var.gce-ansible-server-01.gce_instance_name
+  hostname     = var.gce-ansible-server-01.gce_hostname
+  machine_type = var.gce-ansible-server-01.gce_machine_type
+  zone         = var.gce-ansible-server-01.gce_zones
   tags         = ["ansible-server"]
   boot_disk {
     initialize_params {
-      image = var.gce-instance-01.gce_boot_disk_image
-      size  = var.gce-instance-01.gce_boot_disk_size
+      image = var.gce-ansible-server-01.gce_boot_disk_image
+      size  = var.gce-ansible-server-01.gce_boot_disk_size
       labels = {
         name = "ansible-server"
         sever = "remote-server"
@@ -17,8 +17,8 @@ resource "google_compute_instance" "ansible-server-01" {
   }
 
   network_interface {
-    network = var.gce-instance-01.gce_vpc_nw
-    subnetwork = var.gce-instance-01.gce_snw
+    network = var.gce-ansible-server-01.gce_vpc_nw
+    subnetwork = var.gce-ansible-server-01.gce_snw
 
     access_config {
       // Ephemeral public IP

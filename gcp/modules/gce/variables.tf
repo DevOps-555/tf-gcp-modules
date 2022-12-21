@@ -3,7 +3,7 @@
 variable "gcp_project" {}
 
 ## --- INSTANCE 01 PARAMETERS ---------------------------------------------------------------------------------------------
-variable "gce-instance-01" {
+variable "gce-ansible-server-01" {
     type = object({
             gce_instance_name   = string
             gce_hostname        = string
@@ -19,7 +19,7 @@ variable "gce-instance-01" {
 }
 
 ## --- INSTANCE 02 PARAMETERS ---------------------------------------------------------------------------------------------
-variable "gce-instance-02" {
+variable "gce-ansible-node-01" {
     type = object({
             gce_instance_name   = string
             gce_hostname        = string
@@ -35,7 +35,7 @@ variable "gce-instance-02" {
 }
 
 ## --- INSTANCE 03 PARAMETERS ---------------------------------------------------------------------------------------------
-variable "gce-instance-03" {
+variable "gce-ansible-node-02" {
     type = object({
             gce_instance_name   = string
             gce_hostname        = string

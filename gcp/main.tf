@@ -1,11 +1,9 @@
 provider "google" {
   project = var.gcp_project
-  region = var.gce-instance-01.gce_region
 }
 
 provider "google-beta" {
   project = var.gcp_project
-  region = var.gce-instance-01.gce_region
 }
 
 module "ansible-server-01" {
@@ -13,7 +11,7 @@ module "ansible-server-01" {
 
   gcp_project  = var.gcp_project
 
-  gce-instance-01 = var.gce-instance-01
+  gce-ansible-server-01 = var.gce-ansible-server-01
 }
 
 module "ansible-node-01" {
@@ -21,7 +19,7 @@ module "ansible-node-01" {
 
   gcp_project  = var.gcp_project
 
-  gce-instance-02 = var.gce-instance-02
+  gce-ansible-node-01 = var.gce-ansible-node-01
 }
 
 module "ansible-node-02" {
@@ -29,5 +27,5 @@ module "ansible-node-02" {
 
   gcp_project  = var.gcp_project
 
-  gce-instance-03 = var.gce-instance-03
+  gce-ansible-node-02 = var.gce-ansible-node-02
 }
