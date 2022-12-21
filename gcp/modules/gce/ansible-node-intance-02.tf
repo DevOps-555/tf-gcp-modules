@@ -1,4 +1,4 @@
-resource "google_compute_instance" "test-instance" {
+resource "google_compute_instance" "ansible-node-01" {
   project      = var.gcp_project
   name         = var.gce-instance-03.gce_instance_name
   hostname     = var.gce-instance-03.gce_hostname
