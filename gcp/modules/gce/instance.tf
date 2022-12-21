@@ -10,7 +10,8 @@ resource "google_compute_instance" "test-instance" {
       image = var.gce-instance-01.gce_boot_disk_image
       size  = var.gce-instance-01.gce_boot_disk_size
       labels = {
-        my_label = "ansible-server"
+        name = "ansible-server"
+        sever = "remote-server"
       }
     }
   }
