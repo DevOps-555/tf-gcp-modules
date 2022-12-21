@@ -4,7 +4,7 @@ on:
   workflow_dispatch:    
   push:
   pull_request:
-    branches: 
+    branches:
       - main
 
 jobs:
@@ -42,6 +42,7 @@ jobs:
           echo "GCP_PROJECT_ID=$gcp_project" >> $GITHUB_ENV
           echo "ORG_ID=${{ secrets.ORG_ID }}" >> $GITHUB_ENV
           echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
+          
       - name: Set up gcloud SDK environment
       # Helps to download gcloud SDK's into the runners machines
         uses: google-github-actions/setup-gcloud@v0
@@ -66,7 +67,7 @@ jobs:
       - name: Terraform Validate
         working-directory: ./gcp
         id: validate
-        run: terraform validate -no-color
+        run: terraform validate
 
       - name: Terraform Plan GCP
         working-directory: ./gcp
@@ -79,7 +80,7 @@ jobs:
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+          PLAN: "terraform \n ${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.HUB_TOKEN }}
           script: |
