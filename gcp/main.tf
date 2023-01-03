@@ -22,6 +22,7 @@ module "ansible-node-01" {
   gce-ansible-node-01 = var.gce-ansible-node-01
 }
 
+  # Ansible test server
 module "ansible-node-02" {
   source = "./modules/03"
 
