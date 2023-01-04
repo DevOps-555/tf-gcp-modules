@@ -2,7 +2,7 @@ data "terraform_remote_state" "gcs_rm_state" {
   backend = "gcs"
   config = {
     bucket  = "terraform-state-bucket-001"
-    prefix  = "gce"
+    prefix  = "network"
   }
 }
 
