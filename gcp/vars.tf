@@ -17,3 +17,31 @@ variable "gce-ansible-server-01" {
             gce_snw             = string
     })
 }
+
+## ----- Networking --------------------------------------
+
+variable "gce-vpc" {
+  type = object ({
+            gce_vpc_name = string
+            gce_vpc_mtu = number
+  })
+}
+
+variable "gce-subnetwork" {
+  type = object ({
+            gce_snw_name = string
+            gce_snw_region = string
+            gce_snw_ip_cidr_range = string
+            # gce_snw_gateway_address = string
+  })
+}
+
+## ----- Storage -----------------------
+
+variable "gcs-bucket" {
+    type = object({
+        gcs_bucket_name = string
+        gcs_bucket_storage_class = string
+        gcs_public_access_prevention = string
+    })
+}

@@ -7,25 +7,27 @@ provider "google-beta" {
 }
 
 module "ansible-server-01" {
-  source = "./modules/01"
+  source = "../resources/compute-01"
 
-  gcp_project  = var.gcp_project
+  gcp_project = var.gcp_project
 
   gce-ansible-server-01 = var.gce-ansible-server-01
 }
 
-module "ansible-node-01" {
-  source = "./modules/02"
+module "networking" {
+  source = "../resources/networking"
 
-  gcp_project  = var.gcp_project
+  gcp_project = var.gcp_project
 
-  gce-ansible-node-01 = var.gce-ansible-node-01
+  gce-vpc = var.gce-vpc
+  gce-subnetwork = var.gce-subnetwork
 }
 
-module "ansible-node-02" {
-  source = "./modules/03"
+module "storage" {
+  source = "../resources/storage"
 
-  gcp_project  = var.gcp_project
+  gcp_project = var.gcp_project
 
-  gce-ansible-node-02 = var.gce-ansible-node-02
+  gcs-bucket = var.gcs-bucket
+
 }
