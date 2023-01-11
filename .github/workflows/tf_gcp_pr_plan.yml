@@ -62,7 +62,7 @@ jobs:
         run: | 
           rm -rf .terraform
           rm -rf .terraform.lock.hcl
-          terraform init -backend-config ../gcp/env/${{ matrix.workspace }}_gcp.state.tf -input=false
+          terraform init -backend-config ../env/${{ matrix.workspace }}_gcp.state.tf -input=false
       
       - name: Terraform Validate
         working-directory: ./gcp
