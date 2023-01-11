@@ -43,7 +43,7 @@ jobs:
           echo "ORG_ID=${{ secrets.ORG_ID }}" >> $GITHUB_ENV
           echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
       - name: Set up gcloud SDK environment
-      
+
       # Helps to download gcloud SDK's into the runners machines
         uses: google-github-actions/setup-gcloud@v0
         with:
@@ -62,7 +62,7 @@ jobs:
         run: | 
           rm -rf .terraform
           rm -rf .terraform.lock.hcl
-          terraform init -backend-config ../env/${{ matrix.workspace }}_gcp.state.tf -input=false
+          terraform init -backend-config ../gcp/env/${{ matrix.workspace }}_gcp.state.tf -input=false
       
       - name: Terraform Validate
         working-directory: ./gcp
