@@ -44,6 +44,7 @@ jobs:
           echo "HUB_TOKEN=${{ secrets.HUB_TOKEN }}" >> $GITHUB_ENV
           
       - name: Set up gcloud SDK environment
+
       # Helps to download gcloud SDK's into the runners machines
         uses: google-github-actions/setup-gcloud@v0
         with:

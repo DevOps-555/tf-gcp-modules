@@ -2,8 +2,9 @@
 
 variable "gcp_project" {}
 
-## --- INSTANCE 03 PARAMETERS ---------------------------------------------------------------------------------------------
-variable "gce-ansible-node-02" {
+## --- INSTANCE 01 PARAMETERS ---------------------------------------------------------------------------------------------
+
+variable "gce-ansible-server" {
     type = object({
             gce_instance_name   = string
             gce_hostname        = string

@@ -1,2 +1,2 @@
-bucket = "terraform-state-bucket-001"
-prefix = "gce/"
+bucket  = "terraform-state-bucket-001"
+prefix  = "terraform/state"
