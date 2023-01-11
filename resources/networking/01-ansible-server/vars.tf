@@ -9,9 +9,9 @@ variable "gce-vpc" {
   })
 }
 
-variable "gce-subnetwork" {
+variable "gce-subnetwork-server" {
   type = object ({
-      gce_snw_name = string
+      gce_snw_name_server = string
       gce_snw_region = string
       gce_snw_ip_cidr_range = string
     #   gce_snw_gateway_address = string

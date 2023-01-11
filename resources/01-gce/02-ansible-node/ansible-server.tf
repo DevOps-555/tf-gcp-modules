@@ -1,24 +1,24 @@
 # google_compute_instance.default:
-resource "google_compute_instance" "ansible-01" {
+resource "google_compute_instance" "ansible-02" {
     deletion_protection  = false
     enable_display       = false
-    hostname             = var.gce-ansible-server-01.gce_hostname
+    hostname             = var.gce-ansible-node-01.gce_hostname
     labels               = {
         "citrix" = ""
     }
-    machine_type         = var.gce-ansible-server-01.gce_machine_type
+    machine_type         = var.gce-ansible-node-01.gce_machine_type
     metadata             = {
         "foo"            = "bar"
-        "startup-script" = "echo hi > /test.txt"
+        "startup-script" = "echo hi, this first ansible server intances > /test.txt"
     }
 
-    name                 = var.gce-ansible-server-01.gce_instance_name
+    name                 = var.gce-ansible-node-01.gce_instance_name
     project              = var.gcp_project
     resource_policies    = []
     tags                 = [
         "ansible-node", "ansible"
     ]
-    zone                 = var.gce-ansible-server-01.gce_zones
+    zone                 = var.gce-ansible-node-01.gce_zones
 
     boot_disk {
         auto_delete = true
@@ -26,23 +26,23 @@ resource "google_compute_instance" "ansible-01" {
         mode        = "READ_WRITE"
 
         initialize_params {
-            image  = var.gce-ansible-server-01.gce_boot_disk_image
+            image  = var.gce-ansible-node-01.gce_boot_disk_image
             labels = {
                 "name"  = "ansible-node"
                 "sever" = "remote-node"
             }
-            size   = var.gce-ansible-server-01.gce_boot_disk_size
+            size   = var.gce-ansible-node-01.gce_boot_disk_size
             type   = "pd-standard"
         }
     }
 
     network_interface {
         # name               = "nic0"
-        network            = var.gce-ansible-server-01.gce_vpc_nw
+        network            = var.gce-ansible-node-01.gce_vpc_nw
         network_ip         = "10.156.0.5"
         queue_count        = 0
         stack_type         = "IPV4_ONLY"
-        subnetwork         = var.gce-ansible-server-01.gce_snw
+        subnetwork         = var.gce-ansible-node-01.gce_snw
 
         access_config {
             network_tier = "PREMIUM"
